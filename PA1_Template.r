@@ -2,16 +2,14 @@
 unzip(zipfile="activity.zip")
 data <- read.csv("activity.csv")
 
-
-## ------------------------------------------------------------------------
+#3. producing plot and finding mean and median of number of steps taken each day
 library(ggplot2)
 total.steps <- tapply(data$steps, data$date, FUN=sum, na.rm=TRUE)
 qplot(total.steps, binwidth=1000, xlab="total number of steps taken each day")
 mean(total.steps, na.rm=TRUE)
 median(total.steps, na.rm=TRUE)
 
-
-## ------------------------------------------------------------------------
+#4. time series plot of the average number of steps taken 
 library(ggplot2)
 averages <- aggregate(x=list(steps=data$steps), by=list(interval=data$interval),
                       FUN=mean, na.rm=TRUE)
@@ -21,11 +19,11 @@ ggplot(data=averages, aes(x=interval, y=steps)) +
     ylab("average number of steps taken")
 
 
-## ------------------------------------------------------------------------
+#5. The 5-minute interval that, on average, contains the maximum number of steps
 averages[which.max(averages$steps),]
 
 
-## ----how_many_missing----------------------------------------------------
+#6. Code to describe and show a strategy for imputing missing data
 missing <- is.na(data$steps)
 # How many missing
 table(missing)
@@ -45,7 +43,7 @@ filled.data <- data
 filled.data$steps <- mapply(fill.value, filled.data$steps, filled.data$interval)
 
 
-## ------------------------------------------------------------------------
+
 total.steps <- tapply(filled.data$steps, filled.data$date, FUN=sum)
 qplot(total.steps, binwidth=1000, xlab="total number of steps taken each day")
 mean(total.steps)
